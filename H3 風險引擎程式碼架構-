@@ -1,0 +1,82 @@
+aegisgo/
+├─ apps/
+│  ├─ api/                          # REST API / GraphQL
+│  │  ├─ src/
+│  │  │  ├─ modules/
+│  │  │  │  ├─ reports/            # 社群回報
+│  │  │  │  ├─ risk/               # 風險查詢 API
+│  │  │  │  ├─ guidance/           # 證件遺失/處理流程
+│  │  │  │  └─ health/
+│  │  │  ├─ routes/
+│  │  │  ├─ controllers/
+│  │  │  ├─ services/
+│  │  │  └─ main.ts
+│  │  └─ package.json
+│  │
+│  └─ worker/                      # 背景任務：資料清洗、風險重算
+│     ├─ src/
+│     │  ├─ jobs/
+│     │  │  ├─ ingestExternalEvents.ts
+│     │  │  ├─ normalizeReports.ts
+│     │  │  ├─ updateCellMetrics.ts
+│     │  │  └─ recomputeRiskScores.ts
+│     │  └─ main.ts
+│     └─ package.json
+│
+├─ packages/
+│  ├─ h3-engine/                   # H3 核心模組
+│  │  ├─ src/
+│  │  │  ├─ index.ts
+│  │  │  ├─ config/
+│  │  │  │  └─ resolutions.ts
+│  │  │  ├─ cells/
+│  │  │  │  ├─ encodePointToCell.ts
+│  │  │  │  ├─ polygonToCells.ts
+│  │  │  │  ├─ getCellBoundary.ts
+│  │  │  │  ├─ getNeighbors.ts
+│  │  │  │  ├─ toParentCell.ts
+│  │  │  │  └─ toChildrenCells.ts
+│  │  │  ├─ metrics/
+│  │  │  │  ├─ incidentMetrics.ts
+│  │  │  │  ├─ communityMetrics.ts
+│  │  │  │  ├─ severityMetrics.ts
+│  │  │  │  ├─ trendMetrics.ts
+│  │  │  │  └─ exposureMetrics.ts
+│  │  │  ├─ scoring/
+│  │  │  │  ├─ scoreCell.ts
+│  │  │  │  ├─ normalize.ts
+│  │  │  │  ├─ weighting.ts
+│  │  │  │  └─ classifyRiskLevel.ts
+│  │  │  ├─ queries/
+│  │  │  │  ├─ buildMapTiles.ts
+│  │  │  │  ├─ getHotCells.ts
+│  │  │  │  └─ getCellRiskDetail.ts
+│  │  │  └─ types/
+│  │  │     ├─ cell.ts
+│  │  │     ├─ event.ts
+│  │  │     └─ score.ts
+│  │  └─ package.json
+│  │
+│  ├─ db/
+│  │  ├─ prisma/                  # 或 Drizzle / TypeORM
+│  │  ├─ migrations/
+│  │  └─ seed/
+│  │
+│  └─ shared/
+│     ├─ constants/
+│     ├─ utils/
+│     └─ schemas/
+│
+├─ infra/
+│  ├─ docker/
+│  ├─ compose.yml
+│  └─ nginx/
+│
+├─ docs/
+│  ├─ architecture.md
+│  ├─ risk-model.md
+│  └─ api-spec.md
+│
+├─ .env.example
+├─ package.json
+└─ README.md
