@@ -1,67 +1,50 @@
 # AegisGo
 
-AegisGo 是一個面向自由行旅客的海外安全支援平台，提供區域風險提醒、社群事件通報與突發事件處理指引，協助使用者在陌生環境中快速掌握風險並做出更安全的決策。
+Location-aware situational awareness. Phase 1 is a **static Expo prototype** with mock incidents. There is no live backend, identity, push, or media upload.
 
----
+Priority: Safety > Trust > Privacy > Usability > Speed > Monetization.
 
-## Overview
+AegisGo shows nearby **reported situations**. It does not claim a place is safe or dangerous.
 
-在海外旅遊情境中，旅客常面臨以下問題：
+## Start
 
-- 缺乏即時、可定位的區域安全資訊
-- 安全資訊來源分散，難以快速判斷可信度
-- 遇到護照遺失、文件遺失或其他突發狀況時，不知道該如何處理
-- 報案、理賠或後續資料整理流程繁瑣
+```bash
+npm start
+```
 
-AegisGo 旨在整合地圖風險視覺化、社群回報與事件處理流程，將零碎資訊轉化為可執行的支援工具。
+Then open Expo Go, an emulator, or `npm run web`.
 
----
+## Checks
 
-## Core Features
+```bash
+npx tsc --noEmit
+npm run lint
+npm test
+```
 
-### 1. Map-based Risk Alerts
-- 顯示特定區域的近期風險狀況
-- 整合事件資訊與社群通報
-- 以地圖熱區方式呈現風險差異
-- 協助使用者避開高風險區域
+Pinned for this phase (do not blindly upgrade): Expo SDK 57, React 19.2.3, React Native 0.86.3, TypeScript 6.0.x.
 
-### 2. Community Reporting
-- 提供使用者回報當地事件的機制
-- 支援偷竊、詐騙、衝突、交通異常等類型
-- 建立即時、區域化的安全資訊網絡
-- 作為官方資訊之外的補充來源
+## Architecture (Phase 1)
 
-### 3. Emergency Guidance
-- 提供護照遺失、文件遺失等情境的處理流程
-- 協助使用者快速理解應對步驟
-- 降低突發事件發生時的資訊搜尋成本
+- Expo Router tabs: Map, Nearby, Report, Alerts, Profile
+- Domain logic in `lib/` (confidence, geo, time, PII, notification thresholds)
+- Mock incidents in `data/mockIncidents.ts`
+- Session state in `store/AppState.tsx` (local reports and confirmations)
+- Schematic map in `features/map/MockRiskMap.tsx` (no native map SDK yet)
 
-### 4. Claim / Documentation Support
-- 協助整理報案紀錄、醫療證明、收據與事故資料
-- 降低後續理賠與文件準備成本
-- 支援旅前、旅中、旅後的資料備援需求
+## Manual QA
 
----
+1. Complete four onboarding screens. Location is optional and not requested with camera/contacts/background tracking.
+2. Filter time on Map. Empty copy must **not** say the area is safe.
+3. Open a marker/card. Impact (severity) and confidence are separate.
+4. Submit a report with no description. It appears under Profile → My reports as screening / pending.
+5. Confirm an incident twice: the second attempt is blocked in this session.
+6. Try a phone number or “looks suspicious” in the description: submit is blocked.
+7. Clear local reports from Profile.
+8. Alerts list omits Tier C (map-only) items and uses calm copy.
 
-## Risk Scoring Concept
+## Limits / next phase
 
-AegisGo 的地圖層不只是顯示單一事件，而是將區域作為可計算的風險單元，綜合多項訊號生成風險分數。
+No auth, RLS, PostGIS queries, real moderation queue, push, evidence upload, or background location. Mock coordinates are for a schematic downtown, not a live feed.
 
-可納入的評級因子包含：
-
-- 人口密集度
-- 事件發生頻率
-- 事件嚴重程度
-- 社群回報數量
-- 社群回報可信度
-- 近期風險變化趨勢
-
-### Example Formula
-
-```text
-Risk Score =
-0.30 × Incident Frequency +
-0.25 × Severity +
-0.20 × Population Exposure +
-0.15 × Community Signal Confidence +
-0.10 × Trend
+Next: Phase 2 — Authentication + backend (Supabase, RLS, validated CRUD).
